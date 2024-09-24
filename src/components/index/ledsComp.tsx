@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-label";
 import { Edit2Icon, LightbulbIcon, MinusIcon } from "lucide-react";
+import { Skeleton } from "../ui/skeleton";
 
 interface Props {
   led: any;
@@ -72,10 +73,18 @@ const LedsComp = ({
         >
           {led.isOn ? "Turn Off" : "Turn On"}
         </Button>
-        {!led.isConnected ? (
-          <Button onClick={() => reconectDevice()}>Connect</Button>
+        {!led.isConnected && !led.isConnecting ? (
+          <Button onClick={() => reconectDevice(led.id)}>Connect</Button>
         ) : (
-          <></>
+          <>
+            {led.isConnecting ? (
+              <Skeleton className=''>
+                <Button>Connect</Button>
+              </Skeleton>
+            ) : (
+              <Button>Disconnect</Button>
+            )}
+          </>
         )}
       </div>
       <div className='flex items-center'>

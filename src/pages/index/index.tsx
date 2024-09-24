@@ -15,6 +15,7 @@ interface LED {
   id: number;
   name: string;
   isOn: boolean;
+  isConnecting: boolean;
   isConnected: boolean;
   color: string;
   characteristic?: any;
@@ -34,10 +35,11 @@ export default function LEDControl() {
 
   useEffect(() => {
     const storedDeviceInfo = localStorage.getItem("bleLeds");
-
+    //TODO improve this
     if (storedDeviceInfo) {
       let tempLeds: LED[] = JSON.parse(storedDeviceInfo);
       tempLeds.map((led) => (led.isConnected = false));
+      tempLeds.map((led) => (led.isConnecting = false));
       console.log(storedDeviceInfo);
 
       setLeds(tempLeds);
@@ -55,7 +57,14 @@ export default function LEDControl() {
     }
   }, [leds]);
 
-  const reconectDevice = async () => {
+  const reconectDevice = async (id: number) => {
+    leds.map((led, index) => {
+      if (led.id === id) {
+        const ledsTemps = leds;
+        ledsTemps[index].isConnecting = true;
+        setLeds([...ledsTemps]);
+      }
+    });
     try {
       console.log("Getting existing permitted Bluetooth devices...");
       const devices = await navigator.bluetooth.getDevices();
@@ -67,6 +76,13 @@ export default function LEDControl() {
         connectToBluetoothDevice(device);
       }
     } catch (error) {
+      leds.map((led, index) => {
+        if (led.id === id) {
+          const ledsTemps = leds;
+          ledsTemps[index].isConnecting = false;
+          setLeds([...ledsTemps]);
+        }
+      });
       console.log("Argh! " + error);
     }
   };
@@ -92,12 +108,14 @@ export default function LEDControl() {
                 const ledsTemp = leds;
                 ledsTemp[index].characteristic = device;
                 ledsTemp[index].isConnected = true;
-                setLeds(ledsTemp);
+                ledsTemp[index].isConnecting = false;
+                setLeds([...ledsTemp]);
               }
             });
           });
           console.log("Jippi");
         } catch (error) {
+          //TODO add a toast to notify about connect error
           console.log("Argh! " + error);
         }
       },
@@ -122,6 +140,7 @@ export default function LEDControl() {
           name: `LED-${String(newLedId).padStart(3, "0")}`,
           isOn: false,
           isConnected: true,
+          isConnecting: false,
           color: "#ffffff",
           characteristic: device,
           device: {
