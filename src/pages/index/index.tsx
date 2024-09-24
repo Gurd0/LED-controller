@@ -51,7 +51,6 @@ export default function LEDControl() {
 
   useEffect(() => {
     if (leds.length != 0) {
-      console.log("local data update");
       localStorage.setItem("bleLeds", JSON.stringify(leds));
     }
   }, [leds]);
@@ -65,7 +64,6 @@ export default function LEDControl() {
       }
     });
     try {
-      console.log("Getting existing permitted Bluetooth devices...");
       const devices = await navigator.bluetooth.getDevices();
 
       console.log("> Got " + devices.length + " Bluetooth devices.");
@@ -91,10 +89,9 @@ export default function LEDControl() {
     device.addEventListener(
       "advertisementreceived",
       async () => {
-        console.log('> Received advertisement from "' + device.name + '"...');
         // Stop watching advertisements to conserve battery life.
         abortController.abort();
-        console.log('Connecting to GATT Server from "' + device.name + '"...');
+
         try {
           //TODO add if to update right device.
           const server = await device.gatt.connect();
@@ -103,7 +100,6 @@ export default function LEDControl() {
             //TODO clean this up
             leds.map((led, index) => {
               if (led.device?.characteristicUUID == device.uuid) {
-                console.log("does if run ???? ");
                 const ledsTemp = leds;
                 ledsTemp[index].characteristic = device;
                 ledsTemp[index].isConnected = true;
@@ -112,7 +108,6 @@ export default function LEDControl() {
               }
             });
           });
-          console.log("Jippi");
         } catch (error) {
           //TODO add a toast to notify about connect error
           console.log("Argh! " + error);
@@ -122,7 +117,6 @@ export default function LEDControl() {
     );
 
     try {
-      console.log('Watching advertisements from "' + device.name + '"...');
       await device.watchAdvertisements({ signal: abortController.signal });
     } catch (error) {
       console.log("Argh! " + error);
