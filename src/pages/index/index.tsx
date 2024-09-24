@@ -3,9 +3,8 @@
 import { useState, useEffect } from "react";
 
 import { PlusIcon } from "lucide-react";
-import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@radix-ui/react-label";
+import { Button } from "@/components/ui/button";
+
 import LedsComp from "@/components/index/ledsComp";
 import { connectDevice, connectDeviceFromServer } from "@/helper/connectDevice";
 import { CommandUtils } from "@/helper/CommandUtils";

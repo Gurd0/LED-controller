@@ -1,7 +1,6 @@
 /** @format */
 
-import React from "react";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-label";
 import { Edit2Icon, LightbulbIcon, MinusIcon } from "lucide-react";

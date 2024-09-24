@@ -1,9 +1,7 @@
-// This code is taken from https://github.com/user154lt/ELK-BLEDOM-Command-Util/blob/main/CommandUtils.kt and converted using chatGPT
-
 export class CommandUtils {
 
     // Powers lights on/off
-    createOnOffCommand(isOn) {
+    createOnOffCommand(isOn: boolean): Uint8Array {
         return new Uint8Array([
             0x7E,
             0x04,
@@ -18,7 +16,7 @@ export class CommandUtils {
     }
 
     // Sets color of the lights
-    createColorCommand(redValue, greenValue, blueValue) {
+    createColorCommand(redValue: number, greenValue: number, blueValue: number): Uint8Array {
         return new Uint8Array([
             0x7E,
             0x07,
@@ -33,7 +31,7 @@ export class CommandUtils {
     }
 
     // Sets pattern according to 1 of 29 pre-programmed patterns
-    createPatternCommand(pattern) {
+    createPatternCommand(pattern: number): Uint8Array {
         pattern = Math.min(Math.max(pattern, 0), 28);  // Coerce within 0..28
         return new Uint8Array([
             0x7E,
@@ -49,7 +47,7 @@ export class CommandUtils {
     }
 
     // Sets speed pattern will play at
-    createSpeedCommand(speed) {
+    createSpeedCommand(speed: number): Uint8Array {
         speed = Math.min(Math.max(speed, 0), 100);  // Coerce within 0..100
         return new Uint8Array([
             0x7E,
@@ -65,7 +63,7 @@ export class CommandUtils {
     }
 
     // Sets brightness of the lights
-    createBrightnessCommand(brightness) {
+    createBrightnessCommand(brightness: number): Uint8Array {
         brightness = Math.min(Math.max(brightness, 0), 100);  // Coerce within 0..100
         return new Uint8Array([
             0x7E,
@@ -81,7 +79,7 @@ export class CommandUtils {
     }
 
     // Turns light strip internal mic on/off
-    createMicOnOffCommand(isOn) {
+    createMicOnOffCommand(isOn: boolean): Uint8Array {
         return new Uint8Array([
             0x7E,
             0x04,
@@ -96,7 +94,7 @@ export class CommandUtils {
     }
 
     // Sets mic EQ (0 = Classic, 1 = Soft, 2 = Dynamic, 3 = Disco)
-    createMicEqCommand(eqMode) {
+    createMicEqCommand(eqMode: number): Uint8Array {
         eqMode = Math.min(Math.max(eqMode, 0), 3);  // Coerce within 0..3
         return new Uint8Array([
             0x7E,
@@ -112,7 +110,7 @@ export class CommandUtils {
     }
 
     // Sets mic sensitivity
-    createMicSensitivityCommand(sensitivity) {
+    createMicSensitivityCommand(sensitivity: number): Uint8Array {
         sensitivity = Math.min(Math.max(sensitivity, 0), 100);  // Coerce within 0..100
         return new Uint8Array([
             0x7E,
@@ -128,7 +126,7 @@ export class CommandUtils {
     }
 
     // Sets light strip internal clock
-    createSyncTimeCommand() {
+    createSyncTimeCommand(): Uint8Array {
         const now = new Date();
         return new Uint8Array([
             0x7E,
@@ -144,7 +142,7 @@ export class CommandUtils {
     }
 
     // Sets scheduling for the lights
-    createTimingCommand(hour, minute, second, weekdays, isOn, isSet) {
+    createTimingCommand(hour: number, minute: number, second: number, weekdays: boolean[], isOn: boolean, isSet: boolean): Uint8Array {
         const setOrClearMask = isSet ? 128 : 0;
         const packedWeekdays = this.packWeekdays(weekdays);
 
@@ -162,7 +160,7 @@ export class CommandUtils {
     }
 
     // Packs weekdays into a bit-packed integer (list of booleans)
-    packWeekdays(weekdays) {
+    packWeekdays(weekdays: boolean[]): number {
         let packed = 0;
         for (let i = 0; i < 7; i++) {
             if (weekdays[i]) {
@@ -173,7 +171,7 @@ export class CommandUtils {
     }
 
     // Reorders the RGB wires of the controller
-    createOrderChangeCommand(firstWire, secondWire, thirdWire) {
+    createOrderChangeCommand(firstWire: number, secondWire: number, thirdWire: number): Uint8Array {
         return new Uint8Array([
             0x7E,
             0x06,
